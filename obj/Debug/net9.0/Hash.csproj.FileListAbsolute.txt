@@ -1,0 +1,15 @@
+C:\Users\titas\Documents\Uni\treciasPusmetis\blockchain\Hash\bin\Debug\net9.0\Hash.exe
+C:\Users\titas\Documents\Uni\treciasPusmetis\blockchain\Hash\bin\Debug\net9.0\Hash.deps.json
+C:\Users\titas\Documents\Uni\treciasPusmetis\blockchain\Hash\bin\Debug\net9.0\Hash.runtimeconfig.json
+C:\Users\titas\Documents\Uni\treciasPusmetis\blockchain\Hash\bin\Debug\net9.0\Hash.dll
+C:\Users\titas\Documents\Uni\treciasPusmetis\blockchain\Hash\bin\Debug\net9.0\Hash.pdb
+C:\Users\titas\Documents\Uni\treciasPusmetis\blockchain\Hash\obj\Debug\net9.0\Hash.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\titas\Documents\Uni\treciasPusmetis\blockchain\Hash\obj\Debug\net9.0\Hash.AssemblyInfoInputs.cache
+C:\Users\titas\Documents\Uni\treciasPusmetis\blockchain\Hash\obj\Debug\net9.0\Hash.AssemblyInfo.cs
+C:\Users\titas\Documents\Uni\treciasPusmetis\blockchain\Hash\obj\Debug\net9.0\Hash.csproj.CoreCompileInputs.cache
+C:\Users\titas\Documents\Uni\treciasPusmetis\blockchain\Hash\obj\Debug\net9.0\Hash.sourcelink.json
+C:\Users\titas\Documents\Uni\treciasPusmetis\blockchain\Hash\obj\Debug\net9.0\Hash.dll
+C:\Users\titas\Documents\Uni\treciasPusmetis\blockchain\Hash\obj\Debug\net9.0\refint\Hash.dll
+C:\Users\titas\Documents\Uni\treciasPusmetis\blockchain\Hash\obj\Debug\net9.0\Hash.pdb
+C:\Users\titas\Documents\Uni\treciasPusmetis\blockchain\Hash\obj\Debug\net9.0\Hash.genruntimeconfig.cache
+C:\Users\titas\Documents\Uni\treciasPusmetis\blockchain\Hash\obj\Debug\net9.0\ref\Hash.dll
