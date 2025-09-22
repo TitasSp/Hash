@@ -1,12 +1,13 @@
-﻿class Hash
+﻿public class Hash
 {
     static int Main()
     {
         Console.WriteLine(Mixing("Lietuva", 32));
+        Test.RunAll(32);
         return 0;
     }
 
-    static string Mixing(string input, int output_size)
+    public static string Mixing(string input, int output_size)
     {
         byte[] output = new byte[output_size];
 
