@@ -2,18 +2,29 @@
 {
     static int Main()
     {
-        Console.WriteLine(Mixing("Lietuva", 32));
+        // Fiksuotas salt pavyzdys
+        string saltedHash = Mixing("Lietuva", 32, "MySecretSalt");
+        Console.WriteLine(saltedHash);
+
+        // Dinaminis salt pavyzdys
+        string dynamicSalt = Guid.NewGuid().ToString();
+        Console.WriteLine("Dynamic salt: " + dynamicSalt);
+        Console.WriteLine("Hash with dynamic salt: " + Mixing("Lietuva", 32, dynamicSalt));
+
         Test.RunAll(32);
         return 0;
     }
 
-    public static string Mixing(string input, int output_size)
+    public static string Mixing(string input, int output_size, string salt = "")
     {
+        // prijungiam salt
+        string data = input + salt;
+
         byte[] output = new byte[output_size];
 
-        for (int i = 0; i < input.Length; i++)
+        for (int i = 0; i < data.Length; i++)
         {
-            byte ch = (byte)input[i];
+            byte ch = (byte)data[i];
 
             for (int j = 0; j < output_size; j++)
             {
@@ -37,3 +48,4 @@
         return new string(c);
     }
 }
+

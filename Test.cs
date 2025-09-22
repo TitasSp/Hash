@@ -2,8 +2,12 @@ using System.Diagnostics;
 
 public static class Test
 {
+    private static string GlobalSalt = Guid.NewGuid().ToString();
+
     public static void RunAll(int hashSize)
     {
+        Console.WriteLine($"[INFO] Using global salt: {GlobalSalt}\n");
+
         TestOutputSize(hashSize);
         TestDeterminism(hashSize);
         TestPerformance(hashSize);
@@ -12,7 +16,7 @@ public static class Test
         TestIrreversibility(hashSize);
     }
 
-    // 2. Išvedimo dydis
+        //  Išvedimo dydis
     static void TestOutputSize(int hashSize)
     {
         Console.WriteLine("\n[2] OUTPUT SIZE TEST:");
@@ -22,22 +26,22 @@ public static class Test
         {
             string full = Path.Combine(folder, file);
             string text = File.ReadAllText(full);
-            string h = Hash.Mixing(text, hashSize);
+            string h = Hash.Mixing(text, hashSize, GlobalSalt);
             Console.WriteLine($"{file}: {h.Length} chars (expected {hashSize * 2})");
         }
     }
 
-    // 3. Deterministiškumas
+    //  Deterministiškumas
     static void TestDeterminism(int hashSize)
     {
         Console.WriteLine("\n[3] DETERMINISM TEST:");
         string text = File.ReadAllText(Path.Combine("test", "a.txt"));
-        string h1 = Hash.Mixing(text, hashSize);
-        string h2 = Hash.Mixing(text, hashSize);
+        string h1 = Hash.Mixing(text, hashSize, GlobalSalt);
+        string h2 = Hash.Mixing(text, hashSize, GlobalSalt);
         Console.WriteLine($"Hashes equal? {h1 == h2}");
     }
 
-    // 4. Efektyvumas
+    //  Efektyvumas
     static void TestPerformance(int hashSize)
     {
         Console.WriteLine("\n[4] PERFORMANCE TEST:");
@@ -53,15 +57,14 @@ public static class Test
 
         foreach (int s in sizes)
         {
-            if (s > lines.Length)
-                break;
+            if (s > lines.Length) break;
             string input = string.Join("\n", lines, 0, s);
 
             long total = 0;
             for (int i = 0; i < 5; i++)
             {
                 Stopwatch sw = Stopwatch.StartNew();
-                Hash.Mixing(input, hashSize);
+                Hash.Mixing(input, hashSize, GlobalSalt);
                 sw.Stop();
                 total += sw.ElapsedMilliseconds;
             }
@@ -69,7 +72,7 @@ public static class Test
         }
     }
 
-    // 5. Kolizijų paieška
+    //  Kolizijų paieška
     static void TestCollisions(int hashSize)
     {
         Console.WriteLine("\n[5] COLLISION TEST:");
@@ -84,25 +87,22 @@ public static class Test
             {
                 string a = RandomString(len, rnd);
                 string b = RandomString(len, rnd);
-                if (Hash.Mixing(a, hashSize) == Hash.Mixing(b, hashSize))
+                if (Hash.Mixing(a, hashSize, GlobalSalt) == Hash.Mixing(b, hashSize, GlobalSalt))
                     collisions++;
             }
             Console.WriteLine($"Length {len}: {collisions}/{total} collisions");
         }
     }
 
-    // 6. Lavinos efektas
+    //  Lavinos efektas
     static void TestAvalanche(int hashSize)
     {
         Console.WriteLine("\n[6] AVALANCHE TEST:");
         Random rnd = new Random();
         int tests = 100000;
-        int totalBits = 0,
-            totalHex = 0;
-        int minBits = hashSize * 8,
-            maxBits = 0;
-        int minHex = hashSize * 2,
-            maxHex = 0;
+        int totalBits = 0, totalHex = 0;
+        int minBits = hashSize * 8, maxBits = 0;
+        int minHex = hashSize * 2, maxHex = 0;
 
         for (int i = 0; i < tests; i++)
         {
@@ -111,8 +111,8 @@ public static class Test
             arr[50] = arr[50] == 'a' ? 'b' : 'a';
             string b = new string(arr);
 
-            string ha = Hash.Mixing(a, hashSize);
-            string hb = Hash.Mixing(b, hashSize);
+            string ha = Hash.Mixing(a, hashSize, GlobalSalt);
+            string hb = Hash.Mixing(b, hashSize, GlobalSalt);
 
             int diffBits = CountBitDiff(ha, hb);
             totalBits += diffBits;
@@ -125,31 +125,27 @@ public static class Test
             maxHex = Math.Max(maxHex, diffHex);
         }
 
-        Console.WriteLine(
-            $"Bits difference: avg {(totalBits / (double)tests) / (hashSize * 8) * 100:F2}% "
-                + $"(min {minBits}, max {maxBits})"
-        );
-        Console.WriteLine(
-            $"Hex difference: avg {(totalHex / (double)tests) / (hashSize * 2) * 100:F2}% "
-                + $"(min {minHex}, max {maxHex})"
-        );
+        Console.WriteLine($"Bits difference: avg {(totalBits / (double)tests) / (hashSize * 8) * 100:F2}% " +
+                          $"(min {minBits}, max {maxBits})");
+        Console.WriteLine($"Hex difference: avg {(totalHex / (double)tests) / (hashSize * 2) * 100:F2}% " +
+                          $"(min {minHex}, max {maxHex})");
     }
 
-    // 7. Negrįžtamumas su salt
+    //  Negrįžtamumas su salt
     static void TestIrreversibility(int hashSize)
     {
         Console.WriteLine("\n[7] IRREVERSIBILITY TEST:");
         string input = "password123";
         for (int i = 0; i < 3; i++)
         {
-            string salt = Guid.NewGuid().ToString();
-            string h = Hash.Mixing(input + salt, hashSize);
+            string salt = Guid.NewGuid().ToString(); // kiekvieną kartą naujas salt
+            string h = Hash.Mixing(input, hashSize, salt);
             Console.WriteLine($"Hash with salt {i + 1}: {h}");
         }
     }
 
     // --- Helpers ---
-    static string RandomString(int length, Random rnd = null)
+    static string RandomString(int length, Random rnd = default!)
     {
         rnd ??= new Random();
         const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -173,8 +169,7 @@ public static class Test
     {
         int diff = 0;
         for (int i = 0; i < a.Length; i++)
-            if (a[i] != b[i])
-                diff++;
+            if (a[i] != b[i]) diff++;
         return diff;
     }
 
@@ -189,11 +184,7 @@ public static class Test
     static int CountBits(int n)
     {
         int c = 0;
-        while (n != 0)
-        {
-            c++;
-            n &= n - 1;
-        }
+        while (n != 0) { c++; n &= n - 1; }
         return c;
     }
 }

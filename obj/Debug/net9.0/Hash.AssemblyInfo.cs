@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Hash")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c842415ba5d6e84345c26c9f53a6d196573f624")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6119a5865f0cc09a1f210108971458d5dbee538a")]
 [assembly: System.Reflection.AssemblyProductAttribute("Hash")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Hash")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
