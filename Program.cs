@@ -2,14 +2,46 @@
 {
     static int Main()
     {
-        // Fiksuotas salt pavyzdys
-        string saltedHash = Mixing("Lietuva", 32, "MySecretSalt");
-        Console.WriteLine(saltedHash);
+        int n = -1;
+        while (true)
+        {
+            Console.WriteLine(
+                "write:\n1 - fixed salt example\n2 - dynamic salt example\n3 - hash yout word\n4 - hash your word with your salt\n0 - quit"
+            );
+            n = Convert.ToInt32(Console.ReadLine());
+            if (n == 0)
+            {
+                break;
+            }
+            else if (n == 1)
+            {
+                // Fiksuotas salt pavyzdys
+                string saltedHash = Mixing("Lietuva", 32, "MySecretSalt");
+                Console.WriteLine(saltedHash);
+            }
+            else if (n == 2)
+            {
+                // Dinaminis salt pavyzdys
+                string dynamicSalt = Guid.NewGuid().ToString();
+                Console.WriteLine("Dynamic salt: " + dynamicSalt);
+                Console.WriteLine("Hash with dynamic salt: " + Mixing("Lietuva", 32, dynamicSalt));
+            }
+            else if (n == 3)
+            {
+                Console.WriteLine("write text for hashing: ");
+                string input = Console.ReadLine();
+                Console.WriteLine(Mixing(input, 32, Guid.NewGuid().ToString()));
+            }
+            else if (n == 4)
+            {
+                Console.WriteLine("write text for hashing: ");
+                string input = Console.ReadLine();
+                Console.WriteLine("write salt for hashing: ");
+                string salt = Console.ReadLine();
 
-        // Dinaminis salt pavyzdys
-        string dynamicSalt = Guid.NewGuid().ToString();
-        Console.WriteLine("Dynamic salt: " + dynamicSalt);
-        Console.WriteLine("Hash with dynamic salt: " + Mixing("Lietuva", 32, dynamicSalt));
+                Console.WriteLine(Mixing(input, 32, salt));
+            }
+        }
 
         Test.RunAll(32);
         return 0;
@@ -48,4 +80,3 @@
         return new string(c);
     }
 }
-
