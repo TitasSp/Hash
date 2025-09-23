@@ -6,7 +6,7 @@
         while (true)
         {
             Console.WriteLine(
-                "write:\n1 - fixed salt example\n2 - dynamic salt example\n3 - hash yout word\n4 - hash your word with your salt\n0 - quit"
+                "write:\n1 - fixed salt example\n2 - dynamic salt example\n3 - hash yout word\n4 - hash your word with your salt\n5 - run tests\n0 - quit"
             );
             n = Convert.ToInt32(Console.ReadLine());
             if (n == 0)
@@ -41,9 +41,16 @@
 
                 Console.WriteLine(Mixing(input, 32, salt));
             }
+            else if (n == 5)
+            {
+                Test.RunAll(32);
+            }
+            else
+            {
+                break;
+            }
         }
 
-        Test.RunAll(32);
         return 0;
     }
 
