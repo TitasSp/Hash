@@ -56,24 +56,55 @@
 
     public static string Mixing(string input, int output_size, string salt = "")
     {
-        // prijungiam salt
-        string data = input + salt;
+        // sujungiame input + salt
+        string data = input + "|" + salt;
 
+        // pradinis bufferis
         byte[] output = new byte[output_size];
+        for (int i = 0; i < output.Length; i++)
+            output[i] = (byte)(i * 31 ^ 0xA5); // inicializacija su konstanta
 
-        for (int i = 0; i < data.Length; i++)
+        // kelios maišymo iteracijos
+        int rounds = 5;
+        for (int r = 0; r < rounds; r++)
         {
-            byte ch = (byte)data[i];
-
-            for (int j = 0; j < output_size; j++)
+            for (int i = 0; i < data.Length; i++)
             {
-                output[j] ^= (byte)((ch + j * 13) & 0xFF);
-                output[j] = (byte)((output[j] << 3) | (output[j] >> 5));
-                output[j] = (byte)((output[j] + ch + i) & 0xFF);
+                byte ch = (byte)data[i];
+                for (int j = 0; j < output_size; j++)
+                {
+                    // XOR su rotuotu inputu
+                    output[j] ^= (byte)((ch + (j * 131) + r) & 0xFF);
+
+                    // rotacijos į kairę ir į dešinę
+                    output[j] = (byte)(((output[j] << (r + 1)) | (output[j] >> (7 - r))) & 0xFF);
+
+                    // daugyba su pirminiu skaičiumi ir pridėta konstanta
+                    output[j] = (byte)((output[j] * 31 + 0x9E + r) & 0xFF);
+
+                    // papildomas XOR su aplink esančiais baitais (difuzija)
+                    int k = (j + 7) % output_size;
+                    output[j] ^= (byte)(output[k] >> 3);
+
+                    // nelinijinis keitimas
+                    if (((output[j] >> 3) & 1) == 1)
+                        output[j] = (byte)~output[j];
+                }
             }
         }
 
-        //convert from byte array to string
+        // papildomas maišymas – pasukti visą masyvą
+        for (int r = 0; r < rounds; r++)
+        {
+            for (int j = 0; j < output_size; j++)
+            {
+                int k = (j * 7 + r * 13) % output_size;
+                output[j] ^= output[k];
+                output[j] = (byte)((output[j] << 1) | (output[j] >> 7));
+            }
+        }
+
+        // konvertavimas į HEX string
         char[] c = new char[output.Length * 2];
         int b;
         for (int i = 0; i < output.Length; i++)
